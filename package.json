@@ -1,12 +1,12 @@
 {
-  "name": "openclaw",
+  "name": "localsmallclaw",
   "version": "2026.2.13",
   "description": "Multi-channel AI gateway with extensible messaging integrations",
   "keywords": [],
   "license": "MIT",
   "author": "",
   "bin": {
-    "openclaw": "openclaw.mjs"
+    "localsmallclaw": "openclaw.mjs"
   },
   "files": [
     "CHANGELOG.md",

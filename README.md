@@ -1,5 +1,7 @@
 # 🦞 OpenClaw — Personal AI Assistant
 
+> **EXPERIMENTAL / WIP:** This fork is actively being adapted as `localsmallclaw` for local-first usage and side-by-side install with upstream OpenClaw.
+
 <p align="center">
     <picture>
         <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/openclaw/openclaw/main/docs/assets/openclaw-logo-text-dark.png">
@@ -312,7 +314,7 @@ Runbook: [iOS connect](https://docs.openclaw.ai/platforms/ios).
 
 ## Configuration
 
-Minimal `~/.openclaw/openclaw.json` (model + defaults):
+Minimal `~/.localsmallclaw/localsmallclaw.json` (model + defaults):
 
 ```json5
 {
@@ -321,6 +323,35 @@ Minimal `~/.openclaw/openclaw.json` (model + defaults):
   },
 }
 ```
+
+### Quickstart (LM Studio + 16GB Macs)
+
+`localsmallclaw` defaults are unchanged unless you opt in. This preset is for local-first, low-concurrency runs on base Mac mini M4 (16GB) setups.
+It uses a separate config namespace (`~/.localsmallclaw`) so it can coexist with upstream `openclaw` on the same machine.
+
+1. Copy the preset:
+
+```bash
+mkdir -p ~/.localsmallclaw
+cp config/presets/localsmallclaw.lmstudio.json ~/.localsmallclaw/localsmallclaw.json
+```
+
+2. In LM Studio, enable the OpenAI-compatible server at `http://127.0.0.1:1234/v1`.
+3. Preset default model is `qwen/qwen3-8b` (recommended size class: 7B/8B on 16GB Macs). You can change it if desired.
+4. Keep context at `6144` for stable memory usage on 16GB Macs. If needed, reduce both `agents.defaults.contextTokens` and `models.providers.lmstudio.models[0].contextWindow` to `4096`.
+
+If you already have a config and only want to switch key settings via CLI:
+
+```bash
+localsmallclaw config set agents.defaults.model.primary lmstudio/qwen/qwen3-8b
+localsmallclaw config set agents.defaults.contextTokens 6144 --json
+localsmallclaw config set agents.defaults.maxConcurrent 1 --json
+localsmallclaw config set agents.defaults.subagents.maxConcurrent 1 --json
+localsmallclaw config set agents.defaults.compaction.mode safeguard
+localsmallclaw config set models.providers.lmstudio.baseUrl http://127.0.0.1:1234/v1
+```
+
+Other providers (OpenRouter, Anthropic, OpenAI, etc.) still work. Switch model/provider in config when needed.
 
 [Full configuration reference (all keys + examples).](https://docs.openclaw.ai/gateway/configuration)
 

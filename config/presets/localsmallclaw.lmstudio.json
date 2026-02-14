@@ -1,0 +1,53 @@
+{
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "lmstudio/qwen/qwen3-8b"
+      },
+      "contextTokens": 6144,
+      "maxConcurrent": 1,
+      "subagents": {
+        "maxConcurrent": 1
+      },
+      "contextPruning": {
+        "mode": "cache-ttl",
+        "ttl": "30m",
+        "softTrimRatio": 0.2,
+        "hardClearRatio": 0.65
+      },
+      "compaction": {
+        "mode": "safeguard",
+        "reserveTokensFloor": 2048,
+        "maxHistoryShare": 0.4
+      }
+    }
+  },
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "lmstudio": {
+        "baseUrl": "http://127.0.0.1:1234/v1",
+        "apiKey": "lmstudio",
+        "api": "openai-responses",
+        "models": [
+          {
+            "id": "qwen/qwen3-8b",
+            "name": "Qwen3 8B",
+            "reasoning": false,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 6144,
+            "maxTokens": 2048
+          }
+        ]
+      }
+    }
+  }
+}

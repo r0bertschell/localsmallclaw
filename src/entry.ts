@@ -2,13 +2,16 @@
 import { spawn } from "node:child_process";
 import path from "node:path";
 import process from "node:process";
+import { CLI_NAME } from "./app-id.js";
 import { applyCliProfileEnv, parseCliProfileArgs } from "./cli/profile.js";
+import { applyLocalSmallClawEnvAliases } from "./infra/env-aliases.js";
 import { isTruthyEnvValue, normalizeEnv } from "./infra/env.js";
 import { installProcessWarningFilter } from "./infra/warning-filter.js";
 import { attachChildProcessBridge } from "./process/child-process-bridge.js";
 
-process.title = "openclaw";
+process.title = CLI_NAME;
 installProcessWarningFilter();
+applyLocalSmallClawEnvAliases(process.env);
 normalizeEnv();
 
 if (process.argv.includes("--no-color")) {
@@ -66,7 +69,7 @@ function ensureExperimentalWarningSuppressed(): boolean {
 
   child.once("error", (error) => {
     console.error(
-      "[openclaw] Failed to respawn CLI:",
+      `[${CLI_NAME}] Failed to respawn CLI:`,
       error instanceof Error ? (error.stack ?? error.message) : error,
     );
     process.exit(1);
@@ -149,7 +152,7 @@ if (!ensureExperimentalWarningSuppressed()) {
   const parsed = parseCliProfileArgs(process.argv);
   if (!parsed.ok) {
     // Keep it simple; Commander will handle rich help/errors after we strip flags.
-    console.error(`[openclaw] ${parsed.error}`);
+    console.error(`[${CLI_NAME}] ${parsed.error}`);
     process.exit(2);
   }
 
@@ -163,7 +166,7 @@ if (!ensureExperimentalWarningSuppressed()) {
     .then(({ runCli }) => runCli(process.argv))
     .catch((error) => {
       console.error(
-        "[openclaw] Failed to start CLI:",
+        `[${CLI_NAME}] Failed to start CLI:`,
         error instanceof Error ? (error.stack ?? error.message) : error,
       );
       process.exitCode = 1;

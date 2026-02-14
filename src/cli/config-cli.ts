@@ -256,6 +256,14 @@ export function registerConfigCli(program: Command) {
     });
 
   cmd
+    .command("path")
+    .description("Print resolved config file path")
+    .action(async () => {
+      const snapshot = await readConfigFileSnapshot();
+      defaultRuntime.log(snapshot.path);
+    });
+
+  cmd
     .command("get")
     .description("Get a config value by dot path")
     .argument("<path>", "Config path (dot or bracket notation)")

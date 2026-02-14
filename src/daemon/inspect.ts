@@ -15,7 +15,7 @@ export type ExtraGatewayService = {
   label: string;
   detail: string;
   scope: "user" | "system";
-  marker?: "openclaw" | "clawdbot" | "moltbot";
+  marker?: "localsmallclaw" | "openclaw" | "clawdbot" | "moltbot";
   legacy?: boolean;
 };
 
@@ -23,7 +23,7 @@ export type FindExtraGatewayServicesOptions = {
   deep?: boolean;
 };
 
-const EXTRA_MARKERS = ["openclaw", "clawdbot", "moltbot"] as const;
+const EXTRA_MARKERS = ["localsmallclaw", "openclaw", "clawdbot", "moltbot"] as const;
 const execFileAsync = promisify(execFile);
 
 export function renderGatewayServiceCleanupHints(
@@ -73,8 +73,8 @@ function detectMarker(content: string): Marker | null {
 
 function hasGatewayServiceMarker(content: string): boolean {
   const lower = content.toLowerCase();
-  const markerKeys = ["openclaw_service_marker"];
-  const kindKeys = ["openclaw_service_kind"];
+  const markerKeys = ["localsmallclaw_service_marker", "openclaw_service_marker"];
+  const kindKeys = ["localsmallclaw_service_kind", "openclaw_service_kind"];
   const markerValues = [GATEWAY_SERVICE_MARKER.toLowerCase()];
   const hasMarkerKey = markerKeys.some((key) => lower.includes(key));
   const hasKindKey = kindKeys.some((key) => lower.includes(key));
@@ -95,14 +95,14 @@ function isOpenClawGatewayLaunchdService(label: string, contents: string): boole
   if (!lowerContents.includes("gateway")) {
     return false;
   }
-  return label.startsWith("ai.openclaw.");
+  return label.startsWith("ai.openclaw.") || label.startsWith("ai.localsmallclaw.");
 }
 
 function isOpenClawGatewaySystemdService(name: string, contents: string): boolean {
   if (hasGatewayServiceMarker(contents)) {
     return true;
   }
-  if (!name.startsWith("openclaw-gateway")) {
+  if (!name.startsWith("openclaw-gateway") && !name.startsWith("localsmallclaw-gateway")) {
     return false;
   }
   return contents.toLowerCase().includes("gateway");
@@ -114,7 +114,11 @@ function isOpenClawGatewayTaskName(name: string): boolean {
     return false;
   }
   const defaultName = resolveGatewayWindowsTaskName().toLowerCase();
-  return normalized === defaultName || normalized.startsWith("openclaw gateway");
+  return (
+    normalized === defaultName ||
+    normalized.startsWith("openclaw gateway") ||
+    normalized.startsWith("localsmallclaw gateway")
+  );
 }
 
 function tryExtractPlistLabel(contents: string): string | null {
@@ -135,7 +139,7 @@ function isIgnoredSystemdName(name: string): boolean {
 
 function isLegacyLabel(label: string): boolean {
   const lower = label.toLowerCase();
-  return lower.includes("clawdbot") || lower.includes("moltbot");
+  return lower.includes("clawdbot") || lower.includes("moltbot") || lower.includes("openclaw");
 }
 
 async function scanLaunchdDir(params: {

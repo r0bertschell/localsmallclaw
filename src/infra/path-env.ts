@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import { CLI_NAME } from "../app-id.js";
 import { resolveBrewPathDirs } from "./brew.js";
 import { isTruthyEnvValue } from "./env.js";
 
@@ -55,21 +56,22 @@ function candidateBinDirs(opts: EnsureOpenClawPathOpts): string[] {
 
   const candidates: string[] = [];
 
-  // Bundled macOS app: `openclaw` lives next to the executable (process.execPath).
+  // Bundled macOS app: CLI binary lives next to the executable (process.execPath).
   try {
     const execDir = path.dirname(execPath);
-    const siblingCli = path.join(execDir, "openclaw");
-    if (isExecutable(siblingCli)) {
+    const siblingCli = path.join(execDir, CLI_NAME);
+    const legacySiblingCli = path.join(execDir, "openclaw");
+    if (isExecutable(siblingCli) || isExecutable(legacySiblingCli)) {
       candidates.push(execDir);
     }
   } catch {
     // ignore
   }
 
-  // Project-local installs (best effort): if a `node_modules/.bin/openclaw` exists near cwd,
+  // Project-local installs (best effort): if a CLI bin exists near cwd,
   // include it. This helps when running under launchd or other minimal PATH environments.
   const localBinDir = path.join(cwd, "node_modules", ".bin");
-  if (isExecutable(path.join(localBinDir, "openclaw"))) {
+  if (isExecutable(path.join(localBinDir, CLI_NAME)) || isExecutable(path.join(localBinDir, "openclaw"))) {
     candidates.push(localBinDir);
   }
 
@@ -98,7 +100,7 @@ function candidateBinDirs(opts: EnsureOpenClawPathOpts): string[] {
 }
 
 /**
- * Best-effort PATH bootstrap so skills that require the `openclaw` CLI can run
+ * Best-effort PATH bootstrap so skills that require the CLI can run
  * under launchd/minimal environments (and inside the macOS app bundle).
  */
 export function ensureOpenClawCliOnPath(opts: EnsureOpenClawPathOpts = {}) {
