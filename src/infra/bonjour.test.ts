@@ -118,7 +118,7 @@ describe("gateway bonjour advertiser", () => {
 
     expect(createService).toHaveBeenCalledTimes(1);
     const [gatewayCall] = createService.mock.calls as Array<[Record<string, unknown>]>;
-    expect(gatewayCall?.[0]?.type).toBe("openclaw-gw");
+    expect(gatewayCall?.[0]?.type).toBe("lsmallclaw-gw");
     const gatewayType = asString(gatewayCall?.[0]?.type, "");
     expect(gatewayType.length).toBeLessThanOrEqual(15);
     expect(gatewayCall?.[0]?.port).toBe(18789);
