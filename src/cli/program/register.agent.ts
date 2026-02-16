@@ -155,14 +155,20 @@ ${theme.muted("Docs:")} ${formatDocsLink("/cli/agent", "docs.openclaw.ai/cli/age
         `
 ${theme.heading("Examples:")}
 ${formatHelpExamples([
-  ['openclaw agents set-identity --agent main --name "OpenClaw" --emoji "🦞"', "Set name + emoji."],
-  ["openclaw agents set-identity --agent main --avatar avatars/openclaw.png", "Set avatar path."],
   [
-    "openclaw agents set-identity --workspace ~/.openclaw/workspace --from-identity",
+    'localsmallclaw agents set-identity --agent main --name "OpenClaw" --emoji "🦞"',
+    "Set name + emoji.",
+  ],
+  [
+    "localsmallclaw agents set-identity --agent main --avatar avatars/openclaw.png",
+    "Set avatar path.",
+  ],
+  [
+    "localsmallclaw agents set-identity --workspace ~/.localsmallclaw/workspace --from-identity",
     "Load from IDENTITY.md.",
   ],
   [
-    "openclaw agents set-identity --identity-file ~/.openclaw/workspace/IDENTITY.md --agent main",
+    "localsmallclaw agents set-identity --identity-file ~/.localsmallclaw/workspace/IDENTITY.md --agent main",
     "Use a specific IDENTITY.md.",
   ],
 ])}

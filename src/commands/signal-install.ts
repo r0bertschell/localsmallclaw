@@ -147,7 +147,7 @@ export async function installSignalCli(runtime: RuntimeEnv): Promise<SignalInsta
     };
   }
 
-  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-signal-"));
+  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "localsmallclaw-signal-"));
   const archivePath = path.join(tmpDir, assetName);
 
   runtime.log(`Downloading signal-cli ${version} (${assetName})…`);

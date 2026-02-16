@@ -3,6 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { SsrFPolicy } from "../infra/net/ssrf.js";
+import { STATE_DIRNAME } from "../app-id.js";
 import { logVerbose, shouldLogVerbose } from "../globals.js";
 import { type MediaKind, maxBytesForKind, mediaKindFromMime } from "../media/constants.js";
 import { fetchRemoteMedia } from "../media/fetch.js";
@@ -34,8 +35,8 @@ function getDefaultLocalRoots(): string[] {
   const home = os.homedir();
   return [
     os.tmpdir(),
-    path.join(home, ".openclaw", "media"),
-    path.join(home, ".openclaw", "agents"),
+    path.join(home, STATE_DIRNAME, "media"),
+    path.join(home, STATE_DIRNAME, "agents"),
   ];
 }
 

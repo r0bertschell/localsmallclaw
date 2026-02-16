@@ -3,6 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import type { OpenClawConfig } from "../config/config.js";
 import type { DoctorOptions } from "./doctor-prompter.js";
+import { CONFIG_FILENAME, STATE_DIRNAME } from "../app-id.js";
 import { formatCliCommand } from "../cli/command-format.js";
 import {
   OpenClawSchema,
@@ -149,8 +150,8 @@ async function maybeMigrateLegacyConfig(): Promise<string[]> {
     return changes;
   }
 
-  const targetDir = path.join(home, ".openclaw");
-  const targetPath = path.join(targetDir, "openclaw.json");
+  const targetDir = path.join(home, STATE_DIRNAME);
+  const targetPath = path.join(targetDir, CONFIG_FILENAME);
   try {
     await fs.access(targetPath);
     return changes;
