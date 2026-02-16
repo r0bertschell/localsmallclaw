@@ -327,7 +327,7 @@ Minimal `~/.localsmallclaw/localsmallclaw.json` (model + defaults):
 ### Quickstart (LM Studio + 16GB Macs)
 
 `localsmallclaw` defaults are unchanged unless you opt in. This preset is for local-first, low-concurrency runs on base Mac mini M4 (16GB) setups.
-It uses a separate config namespace (`~/.localsmallclaw`) so it can coexist with upstream `openclaw` on the same machine.
+Coexistence is explicit: upstream `openclaw` uses `~/.openclaw`, while `localsmallclaw` uses `~/.localsmallclaw`.
 
 1. Copy the preset:
 
@@ -339,6 +339,12 @@ cp config/presets/localsmallclaw.lmstudio.json ~/.localsmallclaw/localsmallclaw.
 2. In LM Studio, enable the OpenAI-compatible server at `http://127.0.0.1:1234/v1`.
 3. Preset default model is `qwen/qwen3-8b` (recommended size class: 7B/8B on 16GB Macs). You can change it if desired.
 4. Keep context at `6144` for stable memory usage on 16GB Macs. If needed, reduce both `agents.defaults.contextTokens` and `models.providers.lmstudio.models[0].contextWindow` to `4096`.
+
+Environment overrides (optional):
+
+- `LOCALSMALLCLAW_HOME` overrides the state directory root.
+- `LOCALSMALLCLAW_CONFIG` overrides the config file path.
+- `LOCALSMALLCLAW_CACHE` overrides temp/cache namespace roots that use the shared tmp resolver.
 
 If you already have a config and only want to switch key settings via CLI:
 
